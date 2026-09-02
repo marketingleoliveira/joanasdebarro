@@ -310,6 +310,39 @@ export type Database = {
         }
         Relationships: []
       }
+      role_change_audit: {
+        Row: {
+          action: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_role: Database["public"]["Enums"]["app_role"] | null
+          old_role: Database["public"]["Enums"]["app_role"] | null
+          target_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_role?: Database["public"]["Enums"]["app_role"] | null
+          old_role?: Database["public"]["Enums"]["app_role"] | null
+          target_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_role?: Database["public"]["Enums"]["app_role"] | null
+          old_role?: Database["public"]["Enums"]["app_role"] | null
+          target_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sale_items: {
         Row: {
           id: string
@@ -611,6 +644,7 @@ export type Database = {
           about_text: string | null
           announcement: string | null
           created_at: string
+          design_config: Json
           email: string | null
           free_shipping_threshold: number | null
           hero_banners: Json
@@ -632,6 +666,7 @@ export type Database = {
           about_text?: string | null
           announcement?: string | null
           created_at?: string
+          design_config?: Json
           email?: string | null
           free_shipping_threshold?: number | null
           hero_banners?: Json
@@ -653,6 +688,7 @@ export type Database = {
           about_text?: string | null
           announcement?: string | null
           created_at?: string
+          design_config?: Json
           email?: string | null
           free_shipping_threshold?: number | null
           hero_banners?: Json
@@ -695,6 +731,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_manage_settings: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -702,7 +739,23 @@ export type Database = {
         }
         Returns: boolean
       }
+      list_staff_roles: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
       process_store_order: { Args: { _order_id: string }; Returns: string }
+      set_staff_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _target_user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "manager" | "seller"
