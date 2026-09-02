@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { fetchStoreSettings, formatBRL, shippingFor, StoreSettings } from '@/lib/storeUtils';
 import { Button } from '@/components/ui/button';
-import { Trash2, Minus, Plus } from 'lucide-react';
+import { Trash2, Minus, Plus, LogIn } from 'lucide-react';
 import { SectionTitle } from './Storefront';
 
 export default function CartPage() {
   const { items, subtotal, setQty, remove } = useCart();
+  const { user } = useAuth();
   const [settings, setSettings] = useState<StoreSettings | null>(null);
 
   useEffect(() => {
@@ -16,6 +18,7 @@ export default function CartPage() {
   }, []);
 
   const shipping = shippingFor(subtotal, settings);
+
 
   return (
     <div className="container py-12">
@@ -62,8 +65,20 @@ export default function CartPage() {
             <div className="border-t border-border pt-3 flex justify-between font-bold">
               <span>Total</span><span className="text-primary">{formatBRL(subtotal + shipping)}</span>
             </div>
-            <Button asChild className="w-full mt-2"><Link to="/checkout">Finalizar compra</Link></Button>
+            {user ? (
+              <Button asChild className="w-full mt-2"><Link to="/checkout">Finalizar compra</Link></Button>
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground bg-muted/60 rounded-lg p-3">
+                  É necessário ter uma conta para finalizar a compra. Seu carrinho fica salvo.
+                </p>
+                <Button asChild className="w-full mt-2">
+                  <Link to="/entrar?next=/checkout"><LogIn size={16} className="mr-2" />Entrar ou criar conta</Link>
+                </Button>
+              </>
+            )}
             <Button asChild variant="ghost" className="w-full"><Link to="/loja">Continuar comprando</Link></Button>
+
           </aside>
         </div>
       )}
