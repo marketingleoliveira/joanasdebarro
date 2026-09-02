@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { fetchStoreProducts, fetchStoreSettings, getStoreDesign, StoreProduct, StoreSettings } from '@/lib/storeUtils';
+import { displaySlug, displayTitle, fetchStoreProducts, fetchStoreSettings, getStoreDesign, productImages, StoreProduct, StoreSettings } from '@/lib/storeUtils';
 import ProductCard from '@/components/store/ProductCard';
+import StoreHeroCarousel, { HeroSlide } from '@/components/store/StoreHeroCarousel';
+
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
