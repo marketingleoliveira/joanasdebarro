@@ -69,6 +69,14 @@ export default {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
         },
+        store: {
+          DEFAULT: "hsl(var(--store-bg))",
+          soft: "hsl(var(--store-bg-soft))",
+          diamond: "hsl(var(--store-diamond))",
+          border: "hsl(var(--store-border))",
+          dark: "hsl(var(--store-dark))",
+          "dark-foreground": "hsl(var(--store-dark-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
