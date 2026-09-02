@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { fetchStoreProducts, fetchStoreSettings, StoreProduct, StoreSettings } from '@/lib/storeUtils';
+import { fetchStoreProducts, fetchStoreSettings, getStoreDesign, StoreProduct, StoreSettings } from '@/lib/storeUtils';
 import ProductCard from '@/components/store/ProductCard';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -36,6 +36,7 @@ export default function Storefront() {
   }, [products, q]);
 
   const featured = filtered.filter((p) => p.info?.is_featured);
+  const design = getStoreDesign(settings?.design_config);
 
   return (
     <div>
@@ -57,7 +58,7 @@ export default function Storefront() {
         </section>
       )}
 
-      {cats.length > 0 && !q && (
+      {design.show_categories && cats.length > 0 && !q && (
         <section className="container py-10">
           <div className="flex flex-wrap justify-center gap-3">
             {cats.map((c) => (
@@ -73,10 +74,10 @@ export default function Storefront() {
         </section>
       )}
 
-      {featured.length > 0 && !q && (
+      {design.show_featured && featured.length > 0 && !q && (
         <section className="container pb-8">
           <SectionTitle title="Destaques" />
-          <Grid products={featured} />
+          <Grid products={featured} columns={design.product_columns} />
         </section>
       )}
 
@@ -89,7 +90,7 @@ export default function Storefront() {
         ) : filtered.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">Nenhum produto encontrado.</p>
         ) : (
-          <Grid products={filtered} />
+          <Grid products={filtered} columns={design.product_columns} />
         )}
       </section>
     </div>
@@ -105,9 +106,9 @@ export function SectionTitle({ title }: { title: string }) {
   );
 }
 
-export function Grid({ products }: { products: StoreProduct[] }) {
+export function Grid({ products, columns = 4 }: { products: StoreProduct[]; columns?: 3 | 4 }) {
   return (
-    <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
+    <div className={columns === 3 ? 'grid grid-cols-2 gap-6 lg:grid-cols-3' : 'grid grid-cols-2 gap-6 lg:grid-cols-4'}>
       {products.map((p) => <ProductCard key={p.id} product={p} />)}
     </div>
   );

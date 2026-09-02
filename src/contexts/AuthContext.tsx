@@ -7,12 +7,13 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   userRole: string | null;
+  canManageSettings: boolean;
   profile: { display_name: string; email: string | null; avatar_url: string | null } | null;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null, session: null, loading: true, userRole: null, profile: null, signOut: async () => {}
+  user: null, session: null, loading: true, userRole: null, canManageSettings: false, profile: null, signOut: async () => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [canManageSettings, setCanManageSettings] = useState(false);
   const [profile, setProfile] = useState<AuthContextType['profile']>(null);
 
   useEffect(() => {
@@ -34,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }, 0);
       } else {
         setUserRole(null);
+        setCanManageSettings(false);
         setProfile(null);
         setLoading(false);
       }
@@ -53,12 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const fetchUserData = async (userId: string) => {
-    const [rolesRes, profileRes] = await Promise.all([
+    const [rolesRes, profileRes, settingsAccessRes] = await Promise.all([
       supabase.from('user_roles').select('role').eq('user_id', userId).limit(1).single(),
       supabase.from('profiles').select('display_name, email, avatar_url').eq('user_id', userId).limit(1).single(),
+      supabase.rpc('can_manage_settings'),
     ]);
     setUserRole(rolesRes.data?.role ?? 'seller');
     setProfile(profileRes.data ?? null);
+    setCanManageSettings(settingsAccessRes.data === true);
     setLoading(false);
   };
 
@@ -67,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, userRole, profile, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, userRole, canManageSettings, profile, signOut }}>
       {children}
     </AuthContext.Provider>
   );

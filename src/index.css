@@ -100,4 +100,20 @@
     background-size: 44px 44px;
     background-position: 0 0, 22px 22px;
   }
+
+  .store-theme-terracotta {
+    --store-bg: 18 48% 84%;
+    --store-bg-soft: 30 35% 94%;
+    --store-diamond: 16 42% 72%;
+    --store-border: 18 30% 67%;
+    --store-dark: 22 38% 20%;
+  }
+
+  .store-theme-clean {
+    --store-bg: 35 18% 96%;
+    --store-bg-soft: 35 20% 98%;
+    --store-diamond: 35 12% 88%;
+    --store-border: 25 12% 82%;
+    --store-dark: 25 25% 18%;
+  }
 }
