@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LayoutDashboard, Package, ArrowLeftRight, DollarSign, ShoppingCart, Users, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ArrowLeftRight, DollarSign, ShoppingCart, Users, LogOut, Menu, X, Store, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,8 @@ const navItems = [
   { to: '/sales', label: 'Vendas', icon: ShoppingCart },
   { to: '/finance', label: 'Financeiro', icon: DollarSign },
   { to: '/customers', label: 'Clientes', icon: Users },
+  { to: '/admin/loja', label: 'Loja Online', icon: Store },
+  { to: '/configuracao', label: 'Configuração', icon: Settings },
 ];
 
 export default function AppLayout() {
