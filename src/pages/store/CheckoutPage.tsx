@@ -68,15 +68,20 @@ export default function CheckoutPage() {
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  if (!authLoading && !user) {
+  if (authLoading) {
+    return <div className="container py-20 text-center text-sm text-muted-foreground">Carregando...</div>;
+  }
+
+  if (!user) {
     return (
       <div className="container py-20 text-center space-y-4">
         <h1 className="font-display text-2xl">Entre para finalizar sua compra</h1>
-        <p className="text-muted-foreground text-sm">Crie sua conta de cliente em segundos.</p>
+        <p className="text-muted-foreground text-sm">O cadastro é obrigatório para comprar. Leva menos de um minuto e seu carrinho continua salvo.</p>
         <Button asChild><Link to="/entrar?next=/checkout">Entrar ou cadastrar</Link></Button>
       </div>
     );
   }
+
 
   if (items.length === 0) {
     return (

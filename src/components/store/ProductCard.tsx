@@ -1,12 +1,29 @@
 import { Link } from 'react-router-dom';
 import { StoreProduct, displaySlug, displayTitle, finalPrice, formatBRL, hasOffer, productImages } from '@/lib/storeUtils';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from '@/hooks/use-toast';
+import { ShoppingCart } from 'lucide-react';
 
 export default function ProductCard({ product }: { product: StoreProduct }) {
   const img = productImages(product)[0];
   const price = finalPrice(product);
   const offer = hasOffer(product);
   const out = product.current_stock <= 0;
+  const { add } = useCart();
+
+  const addToCart = () => {
+    add({
+      productId: product.id,
+      name: displayTitle(product),
+      slug: displaySlug(product),
+      price,
+      image: img ?? null,
+      stock: product.current_stock,
+    }, 1);
+    toast({ title: 'Adicionado ao carrinho', description: displayTitle(product) });
+  };
+
 
   return (
     <article className="group relative flex flex-col bg-card rounded-xl border border-border overflow-hidden transition-shadow hover:shadow-lg">
@@ -41,9 +58,15 @@ export default function ProductCard({ product }: { product: StoreProduct }) {
           {offer && <p className="text-xs text-muted-foreground line-through">{formatBRL(product.sell_price)}</p>}
           <p className="text-lg font-bold text-primary">{formatBRL(price)}</p>
         </div>
-        <Button asChild size="sm" className="mt-auto w-full uppercase tracking-wide text-xs">
-          <Link to={`/produto/${displaySlug(product)}`}>Ver opções</Link>
-        </Button>
+        <div className="mt-auto space-y-2">
+          <Button size="sm" className="w-full uppercase tracking-wide text-xs" disabled={out} onClick={addToCart}>
+            <ShoppingCart size={14} className="mr-2" />{out ? 'Esgotado' : 'Adicionar'}
+          </Button>
+          <Button asChild size="sm" variant="outline" className="w-full uppercase tracking-wide text-xs">
+            <Link to={`/produto/${displaySlug(product)}`}>Ver opções</Link>
+          </Button>
+        </div>
+
       </div>
     </article>
   );

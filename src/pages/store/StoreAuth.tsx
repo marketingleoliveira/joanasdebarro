@@ -51,10 +51,17 @@ export default function StoreAuth() {
       return;
     }
     if (data.session) {
+      toast({ title: 'Conta criada!', description: 'Você já está conectado.' });
       navigate(next, { replace: true });
     } else {
-      toast({ title: 'Confirme seu e-mail', description: 'Enviamos um link de confirmação para o seu e-mail.' });
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email: signup.email, password: signup.password });
+      if (signInError) {
+        toast({ title: 'Conta criada', description: 'Faça login para continuar.' });
+      } else {
+        navigate(next, { replace: true });
+      }
     }
+
   };
 
   return (
