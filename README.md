@@ -1,6 +1,6 @@
-# Joana's Business Hub (joanasdebarro)
+# Joana's Loja Integrada a ERP (joanasdebarro)
 
-Sistema corporativo completo para gestão financeira, controle de estoque e operações comerciais desenvolvido para a marca **Joanas de Barro**.
+Sistema corporativo completo para gestão financeira e loja virtual, controle de estoque e operações comerciais desenvolvido para a marca **Joanas de Barro**.
 
 🔗 **Live App:** [joanasdebarro.lovable.app](https://joanasdebarro.lovable.app)  
 🌐 **Site Oficial:** [www.joanasdebarro.com.br](https://www.joanasdebarro.com.br)  
