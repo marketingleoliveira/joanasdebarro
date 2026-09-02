@@ -201,7 +201,7 @@ export default function StoreLayout() {
                 <Link to="/minha-conta">Meus dados</Link>
               </Button>
               <Button asChild variant="link" className="h-auto p-0 text-store-dark-foreground/80 hover:text-primary">
-                <Link to="/login">Área do funcionário</Link>
+                <Link to="/login">Acesso Equipe</Link>
               </Button>
             </div>
           </div>
