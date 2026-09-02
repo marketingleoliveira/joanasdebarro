@@ -59,6 +59,7 @@ const App = () => (
           <CartProvider>
             <Routes>
               {/* Loja pública */}
+              <Route path="/" element={<Navigate to="/loja" replace />} />
               <Route element={<StoreLayout />}>
                 <Route path="/loja" element={<Storefront />} />
                 <Route path="/categoria/:slug" element={<StoreCategory />} />
@@ -72,7 +73,7 @@ const App = () => (
 
               {/* ERP */}
               <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-              <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/erp" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
                 <Route index element={<DashboardPage />} />
                 <Route path="products" element={<ProductsPage />} />
                 <Route path="inventory" element={<InventoryPage />} />
