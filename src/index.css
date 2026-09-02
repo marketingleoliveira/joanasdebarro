@@ -47,8 +47,16 @@
 
     --success: 142 60% 40%;
     --success-foreground: 30 25% 97%;
-    --warning: 38 92% 50%;
+    --warning: 44 96% 56%;
     --warning-foreground: 25 30% 12%;
+
+    /* Loja online */
+    --store-bg: 197 62% 85%;
+    --store-bg-soft: 197 55% 92%;
+    --store-diamond: 197 45% 76%;
+    --store-border: 197 35% 72%;
+    --store-dark: 202 42% 22%;
+    --store-dark-foreground: 197 40% 94%;
 
     --font-display: 'Playfair Display', serif;
     --font-body: 'Source Sans 3', sans-serif;
