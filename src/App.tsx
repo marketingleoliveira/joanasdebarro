@@ -38,14 +38,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/erp" replace />;
   return <>{children}</>;
 }
 
 function SettingsRoute({ children }: { children: React.ReactNode }) {
   const { loading, canManageSettings } = useAuth();
   if (loading) return <div className="flex h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
-  if (!canManageSettings) return <Navigate to="/" replace />;
+  if (!canManageSettings) return <Navigate to="/erp" replace />;
   return <>{children}</>;
 }
 
