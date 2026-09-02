@@ -7,13 +7,13 @@ import { cn } from '@/lib/utils';
 import SupportFAQ from '@/components/SupportFAQ';
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/products', label: 'Produtos', icon: Package },
-  { to: '/inventory', label: 'Estoque', icon: ArrowLeftRight },
-  { to: '/sales', label: 'Vendas', icon: ShoppingCart },
-  { to: '/finance', label: 'Financeiro', icon: DollarSign },
-  { to: '/customers', label: 'Clientes', icon: Users },
-  { to: '/admin/loja', label: 'Loja Online', icon: Store },
+  { to: '/erp', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/erp/products', label: 'Produtos', icon: Package },
+  { to: '/erp/inventory', label: 'Estoque', icon: ArrowLeftRight },
+  { to: '/erp/sales', label: 'Vendas', icon: ShoppingCart },
+  { to: '/erp/finance', label: 'Financeiro', icon: DollarSign },
+  { to: '/erp/customers', label: 'Clientes', icon: Users },
+  { to: '/erp/admin/loja', label: 'Loja Online', icon: Store },
 ];
 
 export default function AppLayout() {
@@ -65,7 +65,7 @@ export default function AppLayout() {
           ))}
           {canManageSettings && (
             <NavLink
-              to="/configuracao"
+              to="/erp/configuracao"
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) => cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",

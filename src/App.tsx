@@ -38,14 +38,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/erp" replace />;
   return <>{children}</>;
 }
 
 function SettingsRoute({ children }: { children: React.ReactNode }) {
   const { loading, canManageSettings } = useAuth();
   if (loading) return <div className="flex h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
-  if (!canManageSettings) return <Navigate to="/" replace />;
+  if (!canManageSettings) return <Navigate to="/erp" replace />;
   return <>{children}</>;
 }
 
@@ -59,6 +59,7 @@ const App = () => (
           <CartProvider>
             <Routes>
               {/* Loja pública */}
+              <Route path="/" element={<Navigate to="/loja" replace />} />
               <Route element={<StoreLayout />}>
                 <Route path="/loja" element={<Storefront />} />
                 <Route path="/categoria/:slug" element={<StoreCategory />} />
@@ -72,7 +73,7 @@ const App = () => (
 
               {/* ERP */}
               <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-              <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/erp" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
                 <Route index element={<DashboardPage />} />
                 <Route path="products" element={<ProductsPage />} />
                 <Route path="inventory" element={<InventoryPage />} />
