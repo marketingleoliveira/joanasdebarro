@@ -14,6 +14,7 @@ import { Settings as SettingsIcon } from 'lucide-react';
 import DesignSettings from '@/components/settings/DesignSettings';
 import RoleSettings from '@/components/settings/RoleSettings';
 import { getStoreDesign, StoreDesignConfig } from '@/lib/storeUtils';
+import type { Json } from '@/integrations/supabase/types';
 
 const providers = [
   { value: 'manual', label: 'Combinar depois (manual / WhatsApp)' },
@@ -62,7 +63,7 @@ export default function SettingsPage() {
       payment_provider: s.payment_provider,
       payment_instructions: s.payment_instructions,
       payment_config: { pix_key: pixKey },
-      design_config: design,
+      design_config: design as unknown as Json,
       is_open: s.is_open,
     }).eq('id', s.id);
     setSaving(false);
