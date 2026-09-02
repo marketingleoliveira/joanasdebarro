@@ -42,6 +42,13 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function SettingsRoute({ children }: { children: React.ReactNode }) {
+  const { loading, canManageSettings } = useAuth();
+  if (loading) return <div className="flex h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
+  if (!canManageSettings) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -73,7 +80,7 @@ const App = () => (
                 <Route path="finance" element={<FinancePage />} />
                 <Route path="customers" element={<CustomersPage />} />
                 <Route path="admin/loja" element={<StoreAdminPage />} />
-                <Route path="configuracao" element={<SettingsPage />} />
+                <Route path="configuracao" element={<SettingsRoute><SettingsPage /></SettingsRoute>} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

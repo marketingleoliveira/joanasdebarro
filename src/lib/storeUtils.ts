@@ -110,6 +110,34 @@ export interface StoreSettings {
   payment_instructions: string | null;
   payment_config: unknown;
   is_open: boolean;
+  design_config: unknown;
+}
+
+export interface StoreDesignConfig {
+  palette: 'classic' | 'terracotta' | 'clean';
+  header_style: 'reference' | 'compact';
+  product_columns: 3 | 4;
+  show_search: boolean;
+  show_contacts: boolean;
+  show_announcement: boolean;
+  show_featured: boolean;
+  show_categories: boolean;
+}
+
+export const DEFAULT_STORE_DESIGN: StoreDesignConfig = {
+  palette: 'classic',
+  header_style: 'reference',
+  product_columns: 4,
+  show_search: true,
+  show_contacts: true,
+  show_announcement: true,
+  show_featured: true,
+  show_categories: true,
+};
+
+export function getStoreDesign(value: unknown): StoreDesignConfig {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return DEFAULT_STORE_DESIGN;
+  return { ...DEFAULT_STORE_DESIGN, ...(value as Partial<StoreDesignConfig>) };
 }
 
 export async function fetchStoreSettings(): Promise<StoreSettings | null> {

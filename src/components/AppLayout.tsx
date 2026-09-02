@@ -14,11 +14,10 @@ const navItems = [
   { to: '/finance', label: 'Financeiro', icon: DollarSign },
   { to: '/customers', label: 'Clientes', icon: Users },
   { to: '/admin/loja', label: 'Loja Online', icon: Store },
-  { to: '/configuracao', label: 'Configuração', icon: Settings },
 ];
 
 export default function AppLayout() {
-  const { profile, userRole, signOut } = useAuth();
+  const { profile, userRole, canManageSettings, signOut } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -64,6 +63,19 @@ export default function AppLayout() {
               {item.label}
             </NavLink>
           ))}
+          {canManageSettings && (
+            <NavLink
+              to="/configuracao"
+              onClick={() => setSidebarOpen(false)}
+              className={({ isActive }) => cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                isActive ? "bg-sidebar-accent text-sidebar-primary" : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+              )}
+            >
+              <Settings size={18} />
+              Configurações
+            </NavLink>
+          )}
         </nav>
 
         <div className="p-4 border-t border-sidebar-border space-y-1">

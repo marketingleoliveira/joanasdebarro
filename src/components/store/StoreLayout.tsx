@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ClipboardList, Instagram, Menu, MessageCircle, Phone, Search, ShoppingCart, User, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { fetchStoreSettings, StoreSettings } from '@/lib/storeUtils';
+import { fetchStoreSettings, getStoreDesign, StoreSettings } from '@/lib/storeUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -23,6 +23,7 @@ export default function StoreLayout() {
   const phone = settings?.phone || '(11) 99446-2244';
   const whatsapp = settings?.whatsapp || '(11) 99446-2244';
   const whatsappDigits = whatsapp.replace(/\D/g, '');
+  const design = getStoreDesign(settings?.design_config);
 
   useEffect(() => {
     fetchStoreSettings().then(setSettings).catch(() => setSettings(null));
@@ -39,8 +40,11 @@ export default function StoreLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <div className="border-b border-store-border/60 bg-card text-store-dark">
+    <div className={cn('min-h-screen flex flex-col bg-background', `store-theme-${design.palette}`)}>
+      {design.show_announcement && settings?.announcement && (
+        <div className="bg-primary px-4 py-2 text-center text-xs font-semibold text-primary-foreground">{settings.announcement}</div>
+      )}
+      {design.show_contacts && <div className="border-b border-store-border/60 bg-card text-store-dark">
         <div className="container flex min-h-8 items-center justify-between px-4 sm:px-8">
           <a
             href={instagramUrl}
@@ -64,10 +68,10 @@ export default function StoreLayout() {
           </div>
           <span className="text-xs md:hidden">Joanas de Barro</span>
         </div>
-      </div>
+      </div>}
 
       <header className="store-diamond border-b border-store-border">
-        <div className="container grid min-h-[140px] grid-cols-[1fr_auto] items-center gap-4 px-4 py-4 md:grid-cols-[1fr_220px_1fr] md:px-8">
+        <div className={cn('container grid grid-cols-[1fr_auto] items-center gap-4 px-4 py-4 md:grid-cols-[1fr_220px_1fr] md:px-8', design.header_style === 'compact' ? 'min-h-[104px]' : 'min-h-[140px]')}>
           <div className="hidden max-w-sm md:block">
             <p className="mb-5 text-xs text-store-dark">
               Bem-vindo,{' '}
@@ -76,7 +80,7 @@ export default function StoreLayout() {
               </Link>{' '}
               para fazer pedidos
             </p>
-            <form onSubmit={onSearch} className="flex w-full border border-store-border bg-card shadow-sm">
+            {design.show_search && <form onSubmit={onSearch} className="flex w-full border border-store-border bg-card shadow-sm">
               <input
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
@@ -87,7 +91,7 @@ export default function StoreLayout() {
               <Button type="submit" size="icon" className="h-9 w-11 shrink-0 rounded-none bg-store-dark text-store-dark-foreground hover:bg-store-dark/90" aria-label="Pesquisar">
                 <Search size={17} aria-hidden="true" />
               </Button>
-            </form>
+            </form>}
           </div>
 
           <Link to="/loja" className="flex items-center justify-start md:justify-center" aria-label="Página inicial da Joanas de Barro">
@@ -144,7 +148,7 @@ export default function StoreLayout() {
         {menuOpen && (
           <div className="md:hidden border-t border-store-border/70 bg-card/95 px-4 py-4 space-y-3">
             <p className="text-xs text-store-dark">Bem-vindo, <Link to={user ? '/minha-conta' : '/entrar'} className="font-semibold text-primary">identifique-se</Link> para fazer pedidos</p>
-            <form onSubmit={onSearch} className="flex border border-store-border">
+            {design.show_search && <form onSubmit={onSearch} className="flex border border-store-border">
               <input
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
@@ -153,7 +157,7 @@ export default function StoreLayout() {
                 className="min-w-0 flex-1 px-4 py-2 text-sm outline-none"
               />
               <Button type="submit" size="icon" className="rounded-none bg-store-dark text-store-dark-foreground"><Search size={17} /></Button>
-            </form>
+            </form>}
             {cats.map((c) => (
               <Link key={c.id} to={`/categoria/${c.slug ?? c.id}`} onClick={() => setMenuOpen(false)} className="block text-sm font-semibold uppercase">
                 {c.name}

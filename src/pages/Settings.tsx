@@ -11,6 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import { Settings as SettingsIcon } from 'lucide-react';
+import DesignSettings from '@/components/settings/DesignSettings';
+import RoleSettings from '@/components/settings/RoleSettings';
+import { getStoreDesign, StoreDesignConfig } from '@/lib/storeUtils';
+import type { Json } from '@/integrations/supabase/types';
 
 const providers = [
   { value: 'manual', label: 'Combinar depois (manual / WhatsApp)' },
@@ -22,21 +26,22 @@ const providers = [
 ];
 
 export default function SettingsPage() {
-  const { userRole } = useAuth();
-  const isAdmin = userRole === 'admin' || userRole === 'manager';
+  const { canManageSettings } = useAuth();
   const [s, setS] = useState<StoreSettings | null>(null);
   const [saving, setSaving] = useState(false);
   const [pixKey, setPixKey] = useState('');
+  const [design, setDesign] = useState<StoreDesignConfig>(getStoreDesign(null));
 
   useEffect(() => {
     fetchStoreSettings().then((row) => {
       setS(row);
       const cfg = (row?.payment_config ?? {}) as Record<string, string>;
       setPixKey(cfg.pix_key ?? '');
+      setDesign(getStoreDesign(row?.design_config));
     });
   }, []);
 
-  if (!isAdmin) return <p className="text-muted-foreground">Apenas administradores e gerentes podem alterar as configurações.</p>;
+  if (!canManageSettings) return <p className="text-muted-foreground">Você não tem acesso a este módulo.</p>;
   if (!s) return <p className="text-muted-foreground text-sm">Carregando configurações...</p>;
 
   const set = <K extends keyof StoreSettings>(k: K, v: StoreSettings[K]) => setS({ ...s, [k]: v });
@@ -58,6 +63,7 @@ export default function SettingsPage() {
       payment_provider: s.payment_provider,
       payment_instructions: s.payment_instructions,
       payment_config: { pix_key: pixKey },
+      design_config: design as unknown as Json,
       is_open: s.is_open,
     }).eq('id', s.id);
     setSaving(false);
@@ -66,17 +72,19 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-5xl">
       <div>
-        <h1 className="text-2xl font-display font-bold flex items-center gap-2"><SettingsIcon size={22} /> Configuração</h1>
-        <p className="text-sm text-muted-foreground">Dados da loja, frete e método de pagamento.</p>
+        <h1 className="text-2xl font-display font-bold flex items-center gap-2"><SettingsIcon size={22} /> Módulo Configurações</h1>
+        <p className="text-sm text-muted-foreground">Administração da loja, design, pagamentos e cargos da equipe.</p>
       </div>
 
       <Tabs defaultValue="loja">
-        <TabsList>
+        <TabsList className="h-auto flex-wrap justify-start">
           <TabsTrigger value="loja">Loja</TabsTrigger>
+          <TabsTrigger value="design">Design e layout</TabsTrigger>
           <TabsTrigger value="frete">Frete</TabsTrigger>
           <TabsTrigger value="pagamento">Pagamento</TabsTrigger>
+          <TabsTrigger value="cargos">Cargos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="loja" className="bg-card border border-border rounded-xl p-6 grid gap-4 sm:grid-cols-2">
@@ -95,6 +103,10 @@ export default function SettingsPage() {
           </div>
         </TabsContent>
 
+        <TabsContent value="design">
+          <DesignSettings value={design} onChange={setDesign} />
+        </TabsContent>
+
         <TabsContent value="frete" className="bg-card border border-border rounded-xl p-6 grid gap-4 sm:grid-cols-2">
           <F label="Frete fixo (R$)">
             <Input type="number" step="0.01" value={String(s.shipping_flat_rate ?? 0)} onChange={(e) => set('shipping_flat_rate', Number(e.target.value))} />
@@ -106,6 +118,10 @@ export default function SettingsPage() {
           <p className="sm:col-span-2 text-xs text-muted-foreground">
             Deixe o frete fixo em 0 para oferecer frete grátis em todos os pedidos.
           </p>
+        </TabsContent>
+
+        <TabsContent value="cargos">
+          <RoleSettings />
         </TabsContent>
 
         <TabsContent value="pagamento" className="bg-card border border-border rounded-xl p-6 grid gap-4">
