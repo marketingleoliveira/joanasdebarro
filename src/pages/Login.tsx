@@ -28,7 +28,7 @@ export default function LoginPage() {
           options: { data: { display_name: displayName } }
         });
         if (error) throw error;
-        toast.success('Conta criada! Verifique seu e-mail.');
+        toast.success('Conta criada com sucesso!');
       }
     } catch (error: any) {
       toast.error(error.message);
