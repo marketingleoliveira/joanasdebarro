@@ -38,25 +38,32 @@ export default function Storefront() {
   const featured = filtered.filter((p) => p.info?.is_featured);
   const design = getStoreDesign(settings?.design_config);
 
+  const slides: HeroSlide[] = useMemo(() => {
+    const base = (featured.length > 0 ? featured : filtered).slice(0, 5).map((p) => ({
+      id: p.id,
+      title: displayTitle(p),
+      subtitle: p.info?.short_description || p.description || null,
+      image: productImages(p)[0] ?? null,
+      href: `/produto/${displaySlug(p)}`,
+    }));
+    if (base.length > 0) return base;
+    return [
+      {
+        id: 'default',
+        title: settings?.store_name || 'Joanas de Barro',
+        subtitle:
+          settings?.about_text ||
+          'Kit café & arte: cafés especiais e cerâmica artesanal para transformar seu ritual diário.',
+        image: null,
+        href: null,
+      },
+    ];
+  }, [featured, filtered, settings]);
+
   return (
     <div>
-      {!q && (
-        <section className="store-diamond-soft border-b border-store-border">
-          <div className="container py-14 text-center">
-            <h1 className="font-display text-3xl sm:text-5xl font-bold text-store-dark">
-              {settings?.store_name || 'Joanas de Barro'}
-            </h1>
-            <p className="mt-3 text-sm sm:text-base text-store-dark/80 max-w-2xl mx-auto">
-              {settings?.about_text || 'Kit café & arte: cafés especiais e cerâmica artesanal feitos para transformar seu ritual diário.'}
-            </p>
-            {settings?.free_shipping_threshold ? (
-              <p className="mt-4 inline-block bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-full">
-                Frete grátis acima de R$ {Number(settings.free_shipping_threshold).toFixed(2).replace('.', ',')}
-              </p>
-            ) : null}
-          </div>
-        </section>
-      )}
+      {!q && <StoreHeroCarousel slides={slides} className="border-b border-store-border" />}
+
 
       {design.show_categories && cats.length > 0 && !q && (
         <section className="container py-10">
